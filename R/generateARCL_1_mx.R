@@ -149,13 +149,28 @@ generateARCL_1_mx <- function(timepoints, burning, sample_size, raw_data){
   Fmatrix = mxMatrix(type = "Full", nrow = 2*timepoints, ncol =2*timepoints+2*timepoints, free =
                        Ffree, values = Fvalues,  name = "F",dimnames = list(manifestVars, c(manifestVars, latentVars) ))
 
-  ##### fit function #####
-  expect <- mxExpectationRAM(A="A", S="S", F="F")
+  ##### MMatrix #####
+  Mvalues = matrix(0, nrow = 1, ncol = 2*timepoints+2*timepoints)
+  Mfree = matrix(FALSE, nrow = 1, ncol = 2*timepoints+2*timepoints)
+  Mlabel = matrix(NA, nrow = 1, ncol = 2*timepoints+2*timepoints)
 
-  mxARCL <- mxModel(model = "ARCL",
-                    mxData(observed = cov(raw_data[,(2*burning+1):(2*burning+2*timepoints)]),type = "cov", numObs =  sample_size),
-                    Amatrix, Smatrix, Fmatrix,
-                    expect, mxFitFunctionML())
-  return(mxARCL)
+  Mmatrix = mxMatrix(type = "Full", nrow = 1, ncol =2*timepoints+2*timepoints, free =
+                       Mfree, values = Mvalues,  name = "M",dimnames = list(NA, c(manifestVars, latentVars) ))
+
+
+  ##### fit function #####
+  expect_cov <- mxExpectationRAM(A="A", S="S", F="F")
+  expect_FIML <- mxExpectationRAM(A="A", S="S", F="F", M = "M")
+
+  mxARCL_cov <- mxModel(model = "ARCL",
+                        mxData(observed = cov(raw_data),type = "cov", numObs =  sample_size),
+                        Amatrix, Smatrix, Fmatrix,
+                        expect_cov, mxFitFunctionML())
+  mxARCL_FIML <- mxModel(model = "ARCL",
+                         mxData(observed = raw_data,type = "raw"),
+                         Amatrix, Smatrix, Fmatrix, Mmatrix,
+                         expect_FIML, mxFitFunctionML())
+  ret <- list("latentVars" = latentVars, "manifestVars" = manifestVars, "mxARCL_cov" = mxARCL_cov, "mxARCL_FIML" = mxARCL_FIML)
+  return(ret)
 }
 

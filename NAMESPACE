@@ -2,5 +2,6 @@
 
 export(generateARCL_1_lavaan)
 export(generateARCL_1_mx)
+export(getUniqueA)
 import(OpenMx)
 import(lavaan)
