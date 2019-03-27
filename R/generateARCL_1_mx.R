@@ -9,6 +9,7 @@
 #' @param burning number of observations to burn before the initial time point
 #' @param sample_size sample size
 #' @param raw_data raw data set - e.g. simulated with generateARCL_1_lavaan
+#' @param lastLVsCorrelated should the last latent variables be correlated?
 #'
 #' @author Jannik Orzek
 #' @import OpenMx
@@ -26,12 +27,13 @@
 #' burning = 100
 #' sample_size = 100
 #' seed = 1234
+#' lastLVsCorrelated = FALSE
 #'
 #' # generate lavaan ARCL(1) with two latent variables:
 #' lavaanModel <- generateARCL_1(a_11 = a_11, a_22 = a_22,a_12 = a_12,a_21 = a_21,
 #'                              phi1_init = phi1_init, phi2_init = phi2_init,
 #'                              timepoints = timepoints, burning = burning,
-#'                              sample_size = sample_size, seed = seed)
+#'                              sample_size = sample_size, seed = seed, lastLVsCorrelated = lastLVsCorrelated)
 #'
 #' myModel <- cfa(lavaanModel$AnalysisModel, sample.cov = cov(lavaanModel$raw_data[,(2*burning+1):(2*burning+2*timepoints)]), sample.nobs = lavaanModel$sample_size)
 #' summary(myModel)
@@ -46,7 +48,7 @@
 #'
 
 
-generateARCL_1_mx <- function(timepoints, burning, sample_size, raw_data){
+generateARCL_1_mx <- function(timepoints, burning, sample_size, raw_data, lastLVsCorrelated = FALSE){
 
   latentVars = c()
   for(time in burning:(burning+timepoints-1)){
@@ -74,10 +76,10 @@ generateARCL_1_mx <- function(timepoints, burning, sample_size, raw_data){
   # regression coefficients
   Alabel_unit <- matrix(c("a_11", "a_12", "a_21", "a_22"), ncol = 2, byrow = T)
   #initial effects
-  Alabel[2*timepoints+3,2*timepoints+1] <- paste("a_11_", burning,sep = "")
-  Alabel[2*timepoints+3,2*timepoints+2] <- paste("a_12_", burning,sep = "")
-  Alabel[2*timepoints+4,2*timepoints+1] <- paste("a_21_", burning,sep = "")
-  Alabel[2*timepoints+4,2*timepoints+2] <- paste("a_22_", burning,sep = "")
+  Alabel[2*timepoints+3,2*timepoints+1] <- paste("a_11",sep = "")
+  Alabel[2*timepoints+3,2*timepoints+2] <- paste("a_12",sep = "")
+  Alabel[2*timepoints+4,2*timepoints+1] <- paste("a_21", sep = "")
+  Alabel[2*timepoints+4,2*timepoints+2] <- paste("a_22",sep = "")
   for(rowstart in seq(5,(2*timepoints), by = 2)){
     Alabel[(2*timepoints+rowstart):(2*timepoints+rowstart+1),(2*timepoints+rowstart-2):(2*timepoints+rowstart+1-2)] = Alabel_unit
   }
@@ -108,10 +110,12 @@ generateARCL_1_mx <- function(timepoints, burning, sample_size, raw_data){
   for(rowstart in seq(3,(2*timepoints), by = 2)){
     Slabel[(2*timepoints+rowstart):(2*timepoints+rowstart+1),(2*timepoints+rowstart):(2*timepoints+rowstart+1)] = Slabel_unit
   }
+  if(lastLVsCorrelated){
   # last disturbance:
   Slabel[(2*timepoints+2*timepoints-1):(2*timepoints+2*timepoints),(2*timepoints+2*timepoints-1):(2*timepoints+2*timepoints)] <-
     matrix(c("phi1",paste("phi12_",burning+timepoints,sep = ""),
              paste("phi12_",burning+timepoints,sep = ""),"phi2"), ncol = 2, byrow = T)
+  }
 
 
   # S free
@@ -123,9 +127,10 @@ generateARCL_1_mx <- function(timepoints, burning, sample_size, raw_data){
   for(rowstart in seq(3,(2*timepoints), by = 2)){
     Sfree[(2*timepoints+rowstart):(2*timepoints+rowstart+1),(2*timepoints+rowstart):(2*timepoints+rowstart+1)] = Sfree_unit
   }
+  if(lastLVsCorrelated){
   # last time point:
   Sfree[(2*timepoints+2*timepoints-1):(2*timepoints+2*timepoints),(2*timepoints+2*timepoints-1):(2*timepoints+2*timepoints)] = TRUE
-
+  }
 
   # Svalues
   Svalues[(2*timepoints+1):(2*timepoints+2),(2*timepoints+1):(2*timepoints+2)] = .5
@@ -163,7 +168,7 @@ generateARCL_1_mx <- function(timepoints, burning, sample_size, raw_data){
   expect_FIML <- mxExpectationRAM(A="A", S="S", F="F", M = "M")
 
   mxARCL_cov <- mxModel(model = "ARCL",
-                        mxData(observed = cov(raw_data),type = "cov", numObs =  sample_size),
+                        mxData(observed = cov(raw_data[,c(manifestVars)]),type = "cov", numObs =  sample_size),
                         Amatrix, Smatrix, Fmatrix,
                         expect_cov, mxFitFunctionML())
   mxARCL_FIML <- mxModel(model = "ARCL",

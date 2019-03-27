@@ -93,11 +93,12 @@ generateARCL_1_lavaan <- function(a_11, a_22, a_12, a_21, phi1_init, phi2_init, 
 
   AnalysisModel <- ''
 
-  latentEffects <- paste("#latent regressions",
-                         paste("eta1_t", burning+1, " ~ a_11_", burning,"*eta1_t", burning, " + a_12_", burning,"*eta2_t", burning, sep = ""),
-                         paste("eta2_t", burning+1, " ~ a_22_", burning,"*eta2_t", burning, " + a_21_", burning,"*eta1_t", burning, sep = ""),
-                         sep = "\n")
-  for(i in (burning+2):(tp-1)){
+  latentEffects <- paste("#latent regressions")
+  #,
+  #                       paste("eta1_t", burning+1, " ~ a_11_", burning,"*eta1_t", burning, " + a_12_", burning,"*eta2_t", burning, sep = ""),
+  #                       paste("eta2_t", burning+1, " ~ a_22_", burning,"*eta2_t", burning, " + a_21_", burning,"*eta1_t", burning, sep = ""),
+  #                       sep = "\n")
+  for(i in (burning+1):(tp-1)){
     eta1 <- paste("eta1_t", i, " ~ a_11*eta1_t", i-1, " + a_12*eta2_t", i-1   ,sep = "")
     eta2 <- paste("eta2_t", i, " ~ a_22*eta2_t", i-1, " + a_21*eta1_t", i-1   ,sep = "")
     latentEffects <- paste(latentEffects, eta1, eta2, sep = '\n')

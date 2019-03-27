@@ -4,7 +4,8 @@
 \alias{generateARCL_1_mx}
 \title{generateARCL_1_mx}
 \usage{
-generateARCL_1_mx(timepoints, burning, sample_size, raw_data)
+generateARCL_1_mx(timepoints, burning, sample_size, raw_data,
+  lastLVsCorrelated = FALSE)
 }
 \arguments{
 \item{timepoints}{number of time points observed in the final data set}
@@ -14,6 +15,8 @@ generateARCL_1_mx(timepoints, burning, sample_size, raw_data)
 \item{sample_size}{sample size}
 
 \item{raw_data}{raw data set - e.g. simulated with generateARCL_1_lavaan}
+
+\item{lastLVsCorrelated}{should the last latent variables be correlated?}
 }
 \description{
 generateARCL_1_mx creates an ARCL(1)-SEM model syntax for OpenMx with 2 latent variables and 1 manifest per latent and time point for data simulation
@@ -33,12 +36,13 @@ timepoints = 10
 burning = 100
 sample_size = 100
 seed = 1234
+lastLVsCorrelated = FALSE
 
 # generate lavaan ARCL(1) with two latent variables:
 lavaanModel <- generateARCL_1(a_11 = a_11, a_22 = a_22,a_12 = a_12,a_21 = a_21,
                              phi1_init = phi1_init, phi2_init = phi2_init,
                              timepoints = timepoints, burning = burning,
-                             sample_size = sample_size, seed = seed)
+                             sample_size = sample_size, seed = seed, lastLVsCorrelated = lastLVsCorrelated)
 
 myModel <- cfa(lavaanModel$AnalysisModel, sample.cov = cov(lavaanModel$raw_data[,(2*burning+1):(2*burning+2*timepoints)]), sample.nobs = lavaanModel$sample_size)
 summary(myModel)
