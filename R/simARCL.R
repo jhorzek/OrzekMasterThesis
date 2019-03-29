@@ -272,20 +272,20 @@ OBS_Mmat_label = matrix(NA, nrow = 1, ncol = length(OBS_manifestVarNames)+length
 
 # build mx matrices:
 OBS_A <- mxMatrix(type = "Full", nrow = length(OBS_manifestVarNames)+length(OBS_latentVarNames), ncol = length(OBS_manifestVarNames)+length(OBS_latentVarNames),
-              values = OBS_Amat_values, free = OBS_Amat_free, labels = OBS_Amat_label, name = "OBS_A")
+              values = OBS_Amat_values, free = OBS_Amat_free, labels = OBS_Amat_label, name = "A")
 OBS_S <- mxMatrix(type = "Full", nrow = length(OBS_manifestVarNames)+length(OBS_latentVarNames), ncol = length(OBS_manifestVarNames)+length(OBS_latentVarNames),
-              values = OBS_Smat_values, free = OBS_Smat_free, labels = OBS_Smat_label, name = "OBS_S")
+              values = OBS_Smat_values, free = OBS_Smat_free, labels = OBS_Smat_label, name = "S")
 OBS_F <- mxMatrix(type = "Full", nrow = length(OBS_manifestVarNames), ncol = length(OBS_manifestVarNames)+length(OBS_latentVarNames),
-              values = OBS_Fmat_values, free = OBS_Fmat_free, labels = OBS_Fmat_label, name = "OBS_F")
+              values = OBS_Fmat_values, free = OBS_Fmat_free, labels = OBS_Fmat_label, name = "F")
 OBS_M <- mxMatrix(type = "Full", nrow = 1, ncol = length(OBS_manifestVarNames)+length(OBS_latentVarNames),
-              values = OBS_Mmat_values, free = OBS_Mmat_free, labels = OBS_Mmat_label, name = "OBS_M",dimnames = list("NA",c(OBS_manifestVarNames, OBS_latentVarNames)))
+              values = OBS_Mmat_values, free = OBS_Mmat_free, labels = OBS_Mmat_label, name = "M",dimnames = list("NA",c(OBS_manifestVarNames, OBS_latentVarNames)))
 
 
 ##### fit function #####
 
-expect_cov <- mxExpectationRAM(A="OBS_A", S="OBS_S", F="OBS_F")
+expect_cov <- mxExpectationRAM(A="A", S="S", F="F")
 
-expect_FIML <- mxExpectationRAM(A="OBS_A", S="OBS_S", F="OBS_F", M = "OBS_M")
+expect_FIML <- mxExpectationRAM(A="A", S="S", F="F", M = "M")
 
 mxARCL_cov <- mxModel(model = "ARCL",
                       mxData(observed = cov(simData[,c(OBS_manifestVarNames)]),type = "cov", numObs =  sampleSize),
