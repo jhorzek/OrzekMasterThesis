@@ -17,6 +17,7 @@
 #' @param Sfree_init free paramters of initial S matrix
 #' @param Slabel_init label paramters of initial S matrix
 #' @param S_firstObsAllFree should all initial observations be allowed to correlate?
+#' @param center should values be mean-centered?
 #'
 #' @author Jannik Orzek
 #' @import OpenMx
@@ -63,7 +64,7 @@
 #' @export
 #'
 #'
-simARCL <- function(numLatent, Timepoints, burning, Avalues, Afree, Alabel, Svalues, Sfree, Slabel, Svalues_init, Sfree_init, Slabel_init, sampleSize, S_firstObsAllFree = TRUE){
+simARCL <- function(numLatent, Timepoints, burning, Avalues, Afree, Alabel, Svalues, Sfree, Slabel, Svalues_init, Sfree_init, Slabel_init, sampleSize, S_firstObsAllFree = TRUE, center = TRUE){
 
 simTimepoints = Timepoints + burning
 manifestVarNames <- c()
@@ -287,19 +288,34 @@ expect_cov <- mxExpectationRAM(A="A", S="S", F="F")
 
 expect_FIML <- mxExpectationRAM(A="A", S="S", F="F", M = "M")
 
-mxARCL_cov <- mxModel(model = "ARCL",
-                      mxData(observed = cov(simData[,c(OBS_manifestVarNames)]),type = "cov", numObs =  sampleSize),
-                      OBS_A, OBS_S, OBS_F,
-                      #manifestVars = OBS_manifestVarNames,
-                      #latentVars = OBS_latentVarNames,
-                      expect_cov, mxFitFunctionML())
-mxARCL_FIML <- mxModel(model = "ARCL",
-                       mxData(observed = simData[,c(OBS_manifestVarNames)],type = "raw"),
+
+if(center){
+  mxARCL_cov <- mxModel(model = "ARCL",
+                        mxData(observed = cov(scale(simData[,c(OBS_manifestVarNames)],center = T,scale = F)),type = "cov", numObs =  sampleSize),
+                        OBS_A, OBS_S, OBS_F,
+                        #manifestVars = OBS_manifestVarNames,
+                        #latentVars = OBS_latentVarNames,
+                        expect_cov, mxFitFunctionML())
+  mxARCL_FIML <- mxModel(model = "ARCL",
+                       mxData(observed = scale(simData[,c(OBS_manifestVarNames)],center = T,scale = F),type = "raw"),
                        OBS_A, OBS_S, OBS_F, OBS_M,
                        manifestVars = OBS_manifestVarNames,
                        latentVars = OBS_latentVarNames,
                        expect_FIML, mxFitFunctionML())
-
+}else{
+  mxARCL_cov <- mxModel(model = "ARCL",
+                        mxData(observed = cov(simData[,c(OBS_manifestVarNames)]),type = "cov", numObs =  sampleSize),
+                        OBS_A, OBS_S, OBS_F,
+                        #manifestVars = OBS_manifestVarNames,
+                        #latentVars = OBS_latentVarNames,
+                        expect_cov, mxFitFunctionML())
+  mxARCL_FIML <- mxModel(model = "ARCL",
+                             mxData(observed = simData[,c(OBS_manifestVarNames)],type = "raw"),
+                             OBS_A, OBS_S, OBS_F, OBS_M,
+                             manifestVars = OBS_manifestVarNames,
+                             latentVars = OBS_latentVarNames,
+                             expect_FIML, mxFitFunctionML())
+}
 
 ret = list("SimModel" = SimModel, "simData" = simData, "mxARCL_cov" = mxARCL_cov, "mxARCL_FIML" = mxARCL_FIML)
 
