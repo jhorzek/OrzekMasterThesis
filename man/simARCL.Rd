@@ -6,7 +6,7 @@
 \usage{
 simARCL(numLatent, Timepoints, burning, Avalues, Afree, Alabel, Svalues,
   Sfree, Slabel, Svalues_init, Sfree_init, Slabel_init, sampleSize,
-  S_firstObsAllFree = TRUE)
+  S_firstObsAllFree = TRUE, center = TRUE)
 }
 \arguments{
 \item{numLatent}{number of latent varaibles per time point}
@@ -36,6 +36,8 @@ simARCL(numLatent, Timepoints, burning, Avalues, Afree, Alabel, Svalues,
 \item{sampleSize}{sample size}
 
 \item{S_firstObsAllFree}{should all initial observations be allowed to correlate?}
+
+\item{center}{should values be mean-centered?}
 }
 \description{
 simARCL creates an ARCL(1)-SEM model with OpenMx with >= 1 latent variables and 1 manifest per latent and time point for data simulation. It returns the simulated data set and a covariance based and a raw data based model
