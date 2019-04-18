@@ -449,7 +449,7 @@ f2 ~~ 0*f3
     ## start fitting with different penalty values:
 
     cov_reg_Model <- tryCatch(fitRegModels(covFullMxModel, data_type = "cov",model_type = "mxModel",
-                                           fitfun = "FML",pen_on = "A",selectedA = selectedA,pen_start = 0,pen_end = .4,pen_stepsize = .01,fit_index = "BIC"),
+                                           fitfun = "FML",pen_on = "A",selectedA = selectedA,pen_start = 0,pen_end = 1,pen_stepsize = .01,fit_index = "BIC"),
 
                               error = function(e){
                                 print("warning: did not find proper solution")
@@ -500,7 +500,7 @@ f2 ~~ 0*f3
     ## start fitting with different penalty values:
 
     FIML_reg_Model <- tryCatch(fitRegModels(model = rawMxModel, data_type = "raw",model_type = "mxModel",
-                                            fitfun = "FIML",pen_on = "A",selectedA = selectedA,pen_start = 0,pen_end = .4,pen_stepsize = .01,fit_index = "BIC"),
+                                            fitfun = "FIML",pen_on = "A",selectedA = selectedA,pen_start = 0,pen_end = 1,pen_stepsize = .01,fit_index = "BIC"),
                                error = function(e){
                                  print("warning: did not find proper solution")
                                  return(NA)
@@ -548,17 +548,14 @@ f2 ~~ 0*f3
 
     # regsem:
 
-    regsem_out <- tryCatch(cv_regsem(lavFullModel, n.lambda = 40, pars_pen = "loadings", fit.ret=c("BIC", "AIC"), metric = "BIC"),
-                           warning = function(w){
+    regsem_out <- tryCatch(suppressWarnings(cv_regsem(lavFullModel, n.lambda = 100, pars_pen = "loadings", fit.ret=c("BIC", "AIC"), metric = "BIC")),
+                           error = function(e) {
                              print("warning: did not find proper solution")
-                             return(NA)
-                           },
-                           error = function(e){
-                             print("warning: did not find proper solution")
-                             return(NA)
-                           }
+                             return(NA)}
     )
-    if(!is.logical(regsem_out)){
+    if(class(regsem_out) == "cvregsem"){
+      # only using converged runs
+      regsem_out$fits <- regsem_out$fits[which(regsem_out$fits[,"conv"]==0),]
 
       print("regsem without CV successful")
 
@@ -620,7 +617,7 @@ f2 ~~ 0*f3
     ### covariance based: ###
 
     CV_cov_reg_Model <- tryCatch(fitRegModels(model = CV_covMxModel, data_type = "cov",model_type = "mxModel",
-                                              fitfun = "FML",pen_on = "A",selectedA = selectedA,pen_start = 0,pen_end = .4,pen_stepsize = .01,
+                                              fitfun = "FML",pen_on = "A",selectedA = selectedA,pen_start = 0,pen_end = 1,pen_stepsize = .01,
                                               fit_index = "CV_m2LL", CV = T, Test_Sample = mx_cov_test_data) ,
 
                                  error = function(e){
@@ -660,7 +657,7 @@ f2 ~~ 0*f3
     ## FIML based models ###
 
     FIML_CV_reg_Model <- tryCatch(fitRegModels(model = FIML_CV_rawMxModel, data_type = "raw",model_type = "mxModel",
-                                               fitfun = "FIML",pen_on = "A",selectedA = selectedA,pen_start = 0,pen_end = .4,pen_stepsize = .01,
+                                               fitfun = "FIML",pen_on = "A",selectedA = selectedA,pen_start = 0,pen_end = 1,pen_stepsize = .01,
                                                fit_index = "CV_m2LL", CV = T, Test_Sample = FIML_test_data),
 
 
@@ -697,17 +694,14 @@ f2 ~~ 0*f3
     reorderedCVSample <- test_raw_data[,rownames(fitted(lavTrainModel)$cov)]
     reorderedCVSampleCov <- cov(reorderedCVSample)
 
-    CV_regsem_out <- tryCatch(cv_regsem(lavTrainModel, n.lambda = 40, pars_pen = "loadings", metric = "chisq", fit.ret2 = "test", test.cov = reorderedCVSampleCov, test.n.obs = nrow(reorderedCVSample)),
-                              warning = function(w){
+    CV_regsem_out <- tryCatch(suppressWarnings(cv_regsem(lavTrainModel, n.lambda = 100, pars_pen = "loadings", metric = "chisq", fit.ret2 = "test", test.cov = reorderedCVSampleCov, test.n.obs = nrow(reorderedCVSample))),
+                              error = function(e) {
                                 print("warning: did not find proper solution")
-                                return(NA)
-                              },
-                              error = function(e){
-                                print("warning: did not find proper solution")
-                                return(NA)
-                              }
+                                return(NA)}
     )
-    if(!is.logical(CV_regsem_out)){
+    if(class(CV_regsem_out) == "cvregsem"){
+
+      CV_regsem_out$fits <- CV_regsem_out$fits[which(CV_regsem_out$fits[,"conv"]==0),]
 
       # fit best model on full data:
       best_lambda_CV_chisq <- CV_regsem_out$fits[which(CV_regsem_out$fits[,"chisq"]== min(CV_regsem_out$fits[,"chisq"], na.rm = T)),"lambda"]
