@@ -5,6 +5,7 @@
 #' @param sampleSize sampleSize
 #' @param seed seed
 #' @param wd working directory. The results will be saved here
+#' @param total_repetitions total number of repetitions
 #'
 #' @author Jannik Orzek
 #' @import OpenMx caret laremm regsem tcltk
@@ -15,7 +16,7 @@
 #'
 #'
 
-simulation1 <- function(sampleSize, seed, wd){
+simulation1 <- function(sampleSize, seed, wd, total_repetitions){
   setwd(wd)
   set.seed(seed)
   # in this model, each factor has one item that it doesn't share with the other items; this is done to
@@ -127,7 +128,7 @@ f2 ~~ 0*f3
 
   ##### start outer loop #####
   # settings
-  total_repetitions = 1000
+  total_repetitions = total_repetitions
   iteration = 1
   improper_solutions = 0
 

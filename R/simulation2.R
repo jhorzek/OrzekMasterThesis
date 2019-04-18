@@ -6,6 +6,7 @@
 #' @param gamma gamma
 #' @param seed seed
 #' @param wd working directory. The results will be saved here
+#' @param total_repetitions total number of repetitions
 #'
 #' @author Jannik Orzek
 #' @import OpenMx caret laremm regsem tcltk
@@ -15,7 +16,7 @@
 #' @export
 #'
 #'
-simulation2 <- function(sampleSize, seed, wd, gamma){
+simulation2 <- function(sampleSize, seed, wd, gamma, total_repetitions){
   setwd(wd)
   set.seed(seed)
 
@@ -25,7 +26,7 @@ simulation2 <- function(sampleSize, seed, wd, gamma){
   sampleSize = sampleSize
 
   ##### prepare result data sets #####
-  total_repetitions = 1000
+  total_repetitions = total_repetitions
   iteration = 1
   improper_solutions = 0
   error = 0

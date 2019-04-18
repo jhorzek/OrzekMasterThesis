@@ -4,7 +4,7 @@
 \alias{simulation1}
 \title{Simulation study 1}
 \usage{
-simulation1(sampleSize, seed, wd)
+simulation1(sampleSize, seed, wd, total_repetitions)
 }
 \arguments{
 \item{sampleSize}{sampleSize}
@@ -12,6 +12,8 @@ simulation1(sampleSize, seed, wd)
 \item{seed}{seed}
 
 \item{wd}{working directory. The results will be saved here}
+
+\item{total_repetitions}{total number of repetitions}
 }
 \description{
 Simulation study 1
