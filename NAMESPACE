@@ -3,6 +3,7 @@
 export(computeRMSE)
 export(generateARCL_1_lavaan)
 export(generateARCL_1_mx)
+export(getQdeltaT)
 export(getUniqueA)
 export(simARCL)
 export(simulation1)
