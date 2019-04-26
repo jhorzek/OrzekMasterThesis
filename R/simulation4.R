@@ -31,7 +31,7 @@ simulation4 <- function(sampleSize, seed, wd, total_repetitions){
   MANIFESTVAR=diag(0,2) # items have 0 measurement-error-variance
   LAMBDA=diag(1,2) # loadings set to 1
   TRAITVAR=matrix(c(0,0,0,0),nrow=2) # no trait variance
-  DIFFUSION=matrix(c(.5,0,0,.3),2) # diffusion matrix G
+  DIFFUSION=matrix(c(1,0,0,1),2) # diffusion matrix G
   CINT=matrix(c(0,0),nrow=2) # intercepts set to zero
   T0MEANS=matrix(0,ncol=1,nrow=2) # initial means set to zero
   T0VAR=diag(1,2) # initial variance set to 1
