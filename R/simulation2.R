@@ -117,7 +117,6 @@ y4 ~~ (1-.6^2)*y4
 
 
     full_raw_data <- simulateData(SimModel, meanstructure = F, sample.nobs = sampleSize)
-    full_raw_data <- scale(full_raw_data, center = T, scale = F)
 
     # split dataset in train and test dataset
     Folds <- createFolds(c(1:sampleSize),2)
@@ -128,6 +127,7 @@ y4 ~~ (1-.6^2)*y4
     train_raw_data <- scale(train_raw_data)
     test_raw_data <- scale(test_raw_data)
 
+    full_raw_data <- scale(full_raw_data)
 
     ##### define lavaan model #####
     FullLavaanModel <- paste('
