@@ -14,7 +14,7 @@
 #' @export
 #'
 #'
-simulation3_20 <- function(sampleSize, seed, wd, total_repetitions){
+simulation3_15 <- function(sampleSize, seed, wd, total_repetitions){
   setwd(wd)
   ##### Settings #####
 

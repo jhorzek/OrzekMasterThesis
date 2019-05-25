@@ -6,6 +6,9 @@
 \usage{
 getQdeltaT(DRIFT, DIFFUSION, deltaT)
 }
+\arguments{
+\item{DIFFUSION}{lower triangle diffusion matrix}
+}
 \description{
 getQdeltaT
 }

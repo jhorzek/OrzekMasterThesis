@@ -4,7 +4,7 @@
 \alias{simulation1}
 \title{Simulation study 1}
 \usage{
-simulation1(sampleSize, seed, wd, total_repetitions)
+simulation1(sampleSize, seed, wd, total_repetitions, zeroThresh)
 }
 \arguments{
 \item{sampleSize}{sampleSize}
