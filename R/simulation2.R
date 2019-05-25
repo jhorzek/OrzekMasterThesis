@@ -636,7 +636,7 @@ y4 ~~ (1-.6^2)*y4
       print("regsem with CV successful")
 
       # extract best penalty
-      lambda <- CV_regsem_out$fits[which(CV_regsem_out$fits[,"chisq"] == min(CV_regsem_out$fits[,"chisq"], na.rm = T)),"lambda"]
+      lambda <- max(CV_regsem_out$fits[which(CV_regsem_out$fits[,"chisq"] == min(CV_regsem_out$fits[,"chisq"], na.rm = T)),"lambda"])
 
       cv_lavaan_model <- regsem(model = full_fitLavaan, lambda = lambda, pars_pen = "gamma", type = "lasso")
       # save parameters:

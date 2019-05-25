@@ -303,15 +303,15 @@ simulation4 <- function(sampleSize, seed, wd, total_repetitions, Scale){
 
   for(i in 1:total_repetitions){
     # a12 is non-zero in true model:
-    overall_evaluation$FIML_AIC_false_zero[i] <- sum(abs(parameterValues$FIML_AIC["eta1 -> eta2",i]) < .001)
-    overall_evaluation$FIML_BIC_false_zero[i] <- sum(abs(parameterValues$FIML_BIC["eta1 -> eta2",i]) < .001)
-    overall_evaluation$FIML_CV_m2LL_false_zero[i] <- sum(abs(parameterValues$FIML_CV_m2LL["eta1 -> eta2",i]) < .001)
+    overall_evaluation$FIML_AIC_false_zero[i] <- sum(abs(parameterValues$FIML_AIC["eta2 -> eta1",i]) < .001)
+    overall_evaluation$FIML_BIC_false_zero[i] <- sum(abs(parameterValues$FIML_BIC["eta2 -> eta1",i]) < .001)
+    overall_evaluation$FIML_CV_m2LL_false_zero[i] <- sum(abs(parameterValues$FIML_CV_m2LL["eta2 -> eta1",i]) < .001)
 
     # a21 is zero in true model
 
-    overall_evaluation$FIML_AIC_false_nonzero[i] <- sum(abs(parameterValues$FIML_AIC["eta2 -> eta1",i]) > .001)
-    overall_evaluation$FIML_BIC_false_nonzero[i] <- sum(abs(parameterValues$FIML_BIC["eta2 -> eta1",i]) > .001)
-    overall_evaluation$FIML_CV_m2LL_false_nonzero[i] <- sum(abs(parameterValues$FIML_CV_m2LL["eta2 -> eta1",i]) > .001)
+    overall_evaluation$FIML_AIC_false_nonzero[i] <- sum(abs(parameterValues$FIML_AIC["eta1 -> eta2",i]) > .001)
+    overall_evaluation$FIML_BIC_false_nonzero[i] <- sum(abs(parameterValues$FIML_BIC["eta1 -> eta2",i]) > .001)
+    overall_evaluation$FIML_CV_m2LL_false_nonzero[i] <- sum(abs(parameterValues$FIML_CV_m2LL["eta1 -> eta2",i]) > .001)
 
   }
 
@@ -323,7 +323,7 @@ simulation4 <- function(sampleSize, seed, wd, total_repetitions, Scale){
 
   # note: regularization makes fit worse. The reason is that both parameters, the non-zero and the true-zero one are regularized. The non-zero one
   # gets pulled away from its true value and this impacts the over-all RMSEA more than setting a parameter that is close to zero to zero
-  save(overall_evaluation, parameterValues, RMSE, total_repetitions, DRIFT, DIFFUSION, error, seed, file = paste("Simulation4_N", sampleSize, "_1_100.RData", sep = ""))
+  save(overall_evaluation, parameterValues, RMSE, total_repetitions, DRIFT, DIFFUSION, error, seed, file = paste("Simulation4_N", sampleSize, "_1_1000.RData", sep = ""))
 
 
 

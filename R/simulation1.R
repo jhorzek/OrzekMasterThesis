@@ -16,7 +16,7 @@
 #'
 #'
 
-simulation1 <- function(sampleSize, seed, wd, total_repetitions){
+simulation1 <- function(sampleSize, seed, wd, total_repetitions, zeroThresh){
   setwd(wd)
   set.seed(seed)
   # in this model, each factor has one item that it doesn't share with the other items; this is done to
@@ -449,7 +449,7 @@ f2 ~~ 0*f3
     ## start fitting with different penalty values:
 
     cov_reg_Model <- tryCatch(fitRegModels(covFullMxModel, data_type = "cov",model_type = "mxModel",
-                                           fitfun = "FML",pen_on = "A",selectedA = selectedA,pen_start = 0,pen_end = 1,pen_stepsize = .01,fit_index = "BIC"),
+                                           fitfun = "FML",pen_on = "A",selectedA = selectedA,pen_start = 0,pen_end = 1,pen_stepsize = .01,fit_index = "BIC",zeroThresh = zeroThresh),
 
                               error = function(e){
                                 print("warning: did not find proper solution")
@@ -500,7 +500,7 @@ f2 ~~ 0*f3
     ## start fitting with different penalty values:
 
     FIML_reg_Model <- tryCatch(fitRegModels(model = rawMxModel, data_type = "raw",model_type = "mxModel",
-                                            fitfun = "FIML",pen_on = "A",selectedA = selectedA,pen_start = 0,pen_end = 1,pen_stepsize = .01,fit_index = "BIC"),
+                                            fitfun = "FIML",pen_on = "A",selectedA = selectedA,pen_start = 0,pen_end = 1,pen_stepsize = .01,fit_index = "BIC", zeroThresh = zeroThresh),
                                error = function(e){
                                  print("warning: did not find proper solution")
                                  return(NA)
@@ -618,7 +618,8 @@ f2 ~~ 0*f3
 
     CV_cov_reg_Model <- tryCatch(fitRegModels(model = CV_covMxModel, data_type = "cov",model_type = "mxModel",
                                               fitfun = "FML",pen_on = "A",selectedA = selectedA,pen_start = 0,pen_end = 1,pen_stepsize = .01,
-                                              fit_index = "CV_m2LL", CV = T, Test_Sample = mx_cov_test_data) ,
+                                              fit_index = "CV_m2LL", CV = T, Test_Sample = mx_cov_test_data
+                                              ,zeroThresh = zeroThresh) ,
 
                                  error = function(e){
                                    print("warning: did not find proper solution")
@@ -658,7 +659,7 @@ f2 ~~ 0*f3
 
     FIML_CV_reg_Model <- tryCatch(fitRegModels(model = FIML_CV_rawMxModel, data_type = "raw",model_type = "mxModel",
                                                fitfun = "FIML",pen_on = "A",selectedA = selectedA,pen_start = 0,pen_end = 1,pen_stepsize = .01,
-                                               fit_index = "CV_m2LL", CV = T, Test_Sample = FIML_test_data),
+                                               fit_index = "CV_m2LL", CV = T, Test_Sample = FIML_test_data,zeroThresh = zeroThresh),
 
 
                                   error = function(e){
