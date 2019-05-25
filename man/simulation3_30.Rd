@@ -5,7 +5,7 @@
 \title{Simulation study 3
 30 percent of cross-lagged parameters non-zero}
 \usage{
-simulation3_30(sampleSize, seed, wd, total_repetitions)
+simulation3_30(sampleSize, seed, wd, total_repetitions, crossEffect)
 }
 \arguments{
 \item{sampleSize}{sampleSize}
@@ -15,6 +15,8 @@ simulation3_30(sampleSize, seed, wd, total_repetitions)
 \item{wd}{working directory. The results will be saved here}
 
 \item{total_repetitions}{total number of repetitions}
+
+\item{crossEffect}{size of cross-lagged effects}
 }
 \description{
 Simulation study 3

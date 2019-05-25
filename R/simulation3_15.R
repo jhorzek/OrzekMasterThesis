@@ -6,6 +6,7 @@
 #' @param seed seed
 #' @param wd working directory. The results will be saved here
 #' @param total_repetitions total number of repetitions
+#' @param crossEffect size of cross-lagged effects
 #' @author Jannik Orzek
 #' @import OpenMx caret laremm regsem tcltk
 #'
@@ -14,7 +15,7 @@
 #' @export
 #'
 #'
-simulation3_15 <- function(sampleSize, seed, wd, total_repetitions){
+simulation3_15 <- function(sampleSize, seed, wd, total_repetitions, crossEffect){
   setwd(wd)
   ##### Settings #####
 
@@ -27,17 +28,17 @@ simulation3_15 <- function(sampleSize, seed, wd, total_repetitions){
   ##### Parameters #####
 
   Avalues <- diag(.5,nrow=5,ncol = 5)
-  Avalues[2,1] <-.2
-  Avalues[3,4] <-.2
-  Avalues[5,4] <-.2
+  Avalues[2,1] <-crossEffect
+  Avalues[3,4] <-crossEffect
+  Avalues[5,4] <-crossEffect
 
   Afree <- matrix(TRUE, 5,5)
   Alabel <- matrix(c("a11", "a12", "a13", "a14", "a15", "a21", "a22", "a23", "a24", "a25", "a31", "a32", "a33", "a34", "a35", "a41", "a42", "a43", "a44", "a45", "a51", "a52", "a53", "a54", "a55"), nrow = 5, byrow = T)
 
   Svalues <- diag(1-.5^2,nrow=5,ncol = 5)
-  Svalues[2,2] <- 1-.5^2 -.5^2
-  Svalues[3,3] <- 1-.5^2 -.2^2
-  Svalues[5,5] <- 1-.5^2 -.2^2
+  Svalues[2,2] <- 1-.5^2 -crossEffect^2
+  Svalues[3,3] <- 1-.5^2 -crossEffect^2
+  Svalues[5,5] <- 1-.5^2 -crossEffect^2
 
   Sfree <- diag(TRUE, 5,5)
   Slabel <- matrix(c("s11", NA, NA, NA, NA,
