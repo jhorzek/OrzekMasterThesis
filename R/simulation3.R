@@ -151,6 +151,9 @@ simulation3 <- function(sampleSize, seed, wd, total_repetitions){
 
     full_raw_data <- scale(full_raw_data)
 
+    simObj$mxARCL_FIML$data$observed <- full_raw_data
+    simObj$mxARCL_cov$data$observed <- cov(full_raw_data)
+
     ##### build models with openMx:#####
 
     # covariance based:
