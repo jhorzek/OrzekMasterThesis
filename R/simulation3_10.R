@@ -1,5 +1,5 @@
 #' Simulation study 3
-#' 50 percent of cross-lagged parameters non-zero
+#' 10 percent of cross-lagged parameters non-zero
 #'
 #'
 #' @param sampleSize sampleSize
@@ -15,7 +15,7 @@
 #' @export
 #'
 #'
-simulation3_50 <- function(sampleSize, seed, wd, total_repetitions, crossEffect, autoEffect){
+simulation3_10 <- function(sampleSize, seed, wd, total_repetitions, crossEffect, autoEffect){
   setwd(wd)
   ##### Settings #####
 
@@ -26,27 +26,16 @@ simulation3_50 <- function(sampleSize, seed, wd, total_repetitions, crossEffect,
 
   ##### Parameters #####
 
-  Avalues <- diag(.5,nrow=5,ncol = 5)
+  Avalues <- diag(autoEffect,nrow=5,ncol = 5)
   Avalues[1,2] <-crossEffect
-  Avalues[1,3] <-crossEffect
-  Avalues[2,3] <-crossEffect
-  Avalues[2,4] <-crossEffect
   Avalues[3,4] <-crossEffect
-  Avalues[3,5] <-crossEffect
-  Avalues[4,5] <-crossEffect
-  Avalues[4,1] <-crossEffect
-  Avalues[5,1] <-crossEffect
-  Avalues[5,2] <-crossEffect
 
   Afree <- matrix(TRUE, 5,5)
   Alabel <- matrix(c("a11", "a12", "a13", "a14", "a15", "a21", "a22", "a23", "a24", "a25", "a31", "a32", "a33", "a34", "a35", "a41", "a42", "a43", "a44", "a45", "a51", "a52", "a53", "a54", "a55"), nrow = 5, byrow = T)
 
-  Svalues <- diag(1-.5^2,nrow=5,ncol = 5)
-  Svalues[1,1] <- 1-.5^2 -crossEffect^2-crossEffect^2
-  Svalues[2,2] <- 1-.5^2 -crossEffect^2-crossEffect^2
-  Svalues[3,3] <- 1-.5^2 -crossEffect^2-crossEffect^2
-  Svalues[4,4] <- 1-.5^2 -crossEffect^2-crossEffect^2
-  Svalues[5,5] <- 1-.5^2 -crossEffect^2-crossEffect^2
+  Svalues <- diag(1-autoEffect^2,nrow=5,ncol = 5)
+  Svalues[1,1] <- 1-autoEffect^2 -crossEffect^2
+  Svalues[3,3] <- 1-autoEffect^2 -crossEffect^2
 
   Sfree <- diag(TRUE, 5,5)
   Slabel <- matrix(c("s11", NA, NA, NA, NA,
@@ -54,6 +43,7 @@ simulation3_50 <- function(sampleSize, seed, wd, total_repetitions, crossEffect,
                      NA, NA, "s33", NA, NA,
                      NA, NA, NA, "s44", NA,
                      NA, NA, NA, NA, "s55"), nrow = 5, byrow = T)
+
 
   ##### select cross-lagged values for regularization #####
 
@@ -127,7 +117,7 @@ simulation3_50 <- function(sampleSize, seed, wd, total_repetitions, crossEffect,
   while(iteration <= total_repetitions){
 
     # simulate ARCL-SEM:
-    simObj <- simARCL_scaled_50(seed = seed, sampleSize = sampleSize, autoEffect = autoEffect, crossEffect = crossEffect)
+    simObj <- simARCL_scaled_10(seed = seed, sampleSize = sampleSize, autoEffect = autoEffect, crossEffect = crossEffect)
 
     # extract and scale raw data
     full_raw_data <- simObj$mxARCL_FIML$data$observed
@@ -306,7 +296,7 @@ simulation3_50 <- function(sampleSize, seed, wd, total_repetitions, crossEffect,
                                                       Sfree = Sfree)
 
     }
-    ############################################BIS HIER GEKOMMEN ###########################
+############################################BIS HIER GEKOMMEN ###########################
     ###### computation without CV ######
     # OpenMx
     ##### Covariance Based Models ####
@@ -348,11 +338,11 @@ simulation3_50 <- function(sampleSize, seed, wd, total_repetitions, crossEffect,
       StempMat <- getUniqueA(full_cov_reg_Model_AIC$BaseModel$S)
       SmatEst = diag(StempMat[16:20])
       RMSE$AIC[,iteration] <- computeRMSE(A_est = AmatEst,
-                                          S_est = SmatEst,
-                                          Apop = Avalues,
-                                          Spop = Svalues,
-                                          Afree = Afree,
-                                          Sfree = Sfree)
+                                                      S_est = SmatEst,
+                                                      Apop = Avalues,
+                                                      Spop = Svalues,
+                                                      Afree = Afree,
+                                                      Sfree = Sfree)
 
       AmatEst = matrix(getUniqueA(full_cov_reg_Model_BIC$BaseModel$A), 5, byrow = F)
       StempMat <- getUniqueA(full_cov_reg_Model_BIC$BaseModel$S)
@@ -413,21 +403,21 @@ simulation3_50 <- function(sampleSize, seed, wd, total_repetitions, crossEffect,
       StempMat <- getUniqueA(full_FIML_reg_Model_AIC$BaseModel$S)
       SmatEst = diag(StempMat[16:20])
       RMSE$FIML_AIC[,iteration] <- computeRMSE(A_est = AmatEst,
-                                               S_est = SmatEst,
-                                               Apop = Avalues,
-                                               Spop = Svalues,
-                                               Afree = Afree,
-                                               Sfree = Sfree)
+                                          S_est = SmatEst,
+                                          Apop = Avalues,
+                                          Spop = Svalues,
+                                          Afree = Afree,
+                                          Sfree = Sfree)
 
       AmatEst = matrix(getUniqueA(full_FIML_reg_Model_BIC$BaseModel$A), 5, byrow = F)
       StempMat <- getUniqueA(full_FIML_reg_Model_BIC$BaseModel$S)
       SmatEst = diag(StempMat[16:20])
       RMSE$FIML_BIC[,iteration] <- computeRMSE(A_est = AmatEst,
-                                               S_est = SmatEst,
-                                               Apop = Avalues,
-                                               Spop = Svalues,
-                                               Afree = Afree,
-                                               Sfree = Sfree)
+                                          S_est = SmatEst,
+                                          Apop = Avalues,
+                                          Spop = Svalues,
+                                          Afree = Afree,
+                                          Sfree = Sfree)
 
 
       print("FIML without CV successful")
@@ -478,11 +468,11 @@ simulation3_50 <- function(sampleSize, seed, wd, total_repetitions, crossEffect,
       StempMat <- getUniqueA(cov_reg_Model_CV_m2LL$BaseModel$S)
       SmatEst = diag(StempMat[16:20])
       RMSE$CV_m2LL[,iteration] <- computeRMSE(A_est = AmatEst,
-                                              S_est = SmatEst,
-                                              Apop = Avalues,
-                                              Spop = Svalues,
-                                              Afree = Afree,
-                                              Sfree = Sfree)
+                                               S_est = SmatEst,
+                                               Apop = Avalues,
+                                               Spop = Svalues,
+                                               Afree = Afree,
+                                               Sfree = Sfree)
 
       print("Covariance with CV successful")
     }else{
@@ -518,11 +508,11 @@ simulation3_50 <- function(sampleSize, seed, wd, total_repetitions, crossEffect,
       StempMat <- getUniqueA(FIML_reg_Model_CV_m2LL$BaseModel$S)
       SmatEst = diag(StempMat[16:20])
       RMSE$FIML_CV_m2LL[,iteration] <- computeRMSE(A_est = AmatEst,
-                                                   S_est = SmatEst,
-                                                   Apop = Avalues,
-                                                   Spop = Svalues,
-                                                   Afree = Afree,
-                                                   Sfree = Sfree)
+                                              S_est = SmatEst,
+                                              Apop = Avalues,
+                                              Spop = Svalues,
+                                              Afree = Afree,
+                                              Sfree = Sfree)
 
       print("FIML with CV successful")
     }else{
