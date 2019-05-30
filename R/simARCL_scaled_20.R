@@ -11,8 +11,7 @@
 #' @export
 #'
 #'
-simARCL_scaled_20 <- function(seed, sampleSize, autoEffect, crossEffect){
-  set.seed(seed)
+simARCL_scaled_20 <- function(sampleSize, autoEffect, crossEffect){
 #t1
   x1_t1 <-rnorm(n = sampleSize, mean = 0, sd = 1)
   x2_t1 <-rnorm(n = sampleSize, mean = 0, sd = 1)
@@ -75,11 +74,11 @@ simARCL_scaled_20 <- function(seed, sampleSize, autoEffect, crossEffect){
   x5_t9 <- autoEffect*x5_t8 + crossEffect*x1_t8 + rnorm(n = sampleSize, 0, sd = sqrt(1-(autoEffect^2*var(x5_t8) + crossEffect^2*var(x1_t8)+ autoEffect*crossEffect*2*cov(x5_t8,x1_t8))))
 
   #t10
-  x1_t90 <- autoEffect*x1_t9 + crossEffect*x2_t9 + rnorm(n = sampleSize, 0, sd = sqrt(1-(autoEffect^2*var(x1_t9) + crossEffect^2*var(x2_t9)+ autoEffect*crossEffect*2*cov(x1_t9,x2_t9))))
-  x2_t90 <- autoEffect*x2_t9 + crossEffect*x3_t9 + rnorm(n = sampleSize, 0, sd = sqrt(1-(autoEffect^2*var(x2_t9) + crossEffect^2*var(x3_t9)+ autoEffect*crossEffect*2*cov(x2_t9,x3_t9))))
-  x3_t90 <- autoEffect*x3_t9 + crossEffect*x4_t9 + rnorm(n = sampleSize, 0, sd = sqrt(1-(autoEffect^2*var(x3_t9) + crossEffect^2*var(x4_t9)+ autoEffect*crossEffect*2*cov(x3_t9,x4_t9))))
-  x4_t90 <- autoEffect*x4_t9 + crossEffect*x5_t9 + rnorm(n = sampleSize, 0, sd = sqrt(1-(autoEffect^2*var(x4_t9) + crossEffect^2*var(x5_t9)+ autoEffect*crossEffect*2*cov(x4_t9,x5_t9))))
-  x5_t90 <- autoEffect*x5_t9 + crossEffect*x1_t9 + rnorm(n = sampleSize, 0, sd = sqrt(1-(autoEffect^2*var(x5_t9) + crossEffect^2*var(x1_t9)+ autoEffect*crossEffect*2*cov(x5_t9,x1_t9))))
+  x1_t10 <- autoEffect*x1_t9 + crossEffect*x2_t9 + rnorm(n = sampleSize, 0, sd = sqrt(1-(autoEffect^2*var(x1_t9) + crossEffect^2*var(x2_t9)+ autoEffect*crossEffect*2*cov(x1_t9,x2_t9))))
+  x2_t10 <- autoEffect*x2_t9 + crossEffect*x3_t9 + rnorm(n = sampleSize, 0, sd = sqrt(1-(autoEffect^2*var(x2_t9) + crossEffect^2*var(x3_t9)+ autoEffect*crossEffect*2*cov(x2_t9,x3_t9))))
+  x3_t10 <- autoEffect*x3_t9 + crossEffect*x4_t9 + rnorm(n = sampleSize, 0, sd = sqrt(1-(autoEffect^2*var(x3_t9) + crossEffect^2*var(x4_t9)+ autoEffect*crossEffect*2*cov(x3_t9,x4_t9))))
+  x4_t10 <- autoEffect*x4_t9 + crossEffect*x5_t9 + rnorm(n = sampleSize, 0, sd = sqrt(1-(autoEffect^2*var(x4_t9) + crossEffect^2*var(x5_t9)+ autoEffect*crossEffect*2*cov(x4_t9,x5_t9))))
+  x5_t10 <- autoEffect*x5_t9 + crossEffect*x1_t9 + rnorm(n = sampleSize, 0, sd = sqrt(1-(autoEffect^2*var(x5_t9) + crossEffect^2*var(x1_t9)+ autoEffect*crossEffect*2*cov(x5_t9,x1_t9))))
 
 
   SimulatedDataSet <- cbind(x1_t1, x2_t1, x3_t1, x4_t1, x5_t1,
@@ -122,7 +121,7 @@ simARCL_scaled_20 <- function(seed, sampleSize, autoEffect, crossEffect){
   AnalysisModels <- createARCLModel(numLatent = 5, Timepoints = 5, burning = 5,
                                     Avalues = Avalues, Afree = Afree, Alabel = Alabel,
                                     Svalues = Svalues, Sfree = Sfree, Slabel = Slabel,
-                                    S_firstObsAllFree = T, SimulatedDataSet = SimulatedDataSet
+                                    S_firstObsAllFree = T, SimulatedDataSet = SimulatedDataSet, sampleSize = sampleSize
   )
 
   ret = list("mxARCL_cov" = AnalysisModels$mxARCL_cov, "mxARCL_FIML" = AnalysisModels$mxARCL_FIML, "SimulatedDataSet" = SimulatedDataSet)

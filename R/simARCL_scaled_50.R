@@ -11,8 +11,7 @@
 #' @export
 #'
 #'
-simARCL_scaled_50 <- function(seed, sampleSize, autoEffect, crossEffect){
-  set.seed(seed)
+simARCL_scaled_50 <- function(sampleSize, autoEffect, crossEffect){
 
 # t1
 x1_t1 <-rnorm(n = sampleSize, mean = 0, sd = 1)
@@ -346,7 +345,7 @@ Slabel <- matrix(c("s11", NA, NA, NA, NA,
 AnalysisModels <- createARCLModel(numLatent = 5, Timepoints = 5, burning = 5,
                                   Avalues = Avalues, Afree = Afree, Alabel = Alabel,
                                   Svalues = Svalues, Sfree = Sfree, Slabel = Slabel,
-                                  S_firstObsAllFree = T, SimulatedDataSet = SimulatedDataSet
+                                  S_firstObsAllFree = T, SimulatedDataSet = SimulatedDataSet, sampleSize = sampleSize
 )
 
 ret = list("mxARCL_cov" = AnalysisModels$mxARCL_cov, "mxARCL_FIML" = AnalysisModels$mxARCL_FIML, "SimulatedDataSet" = SimulatedDataSet)

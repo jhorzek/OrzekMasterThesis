@@ -11,8 +11,7 @@
 #' @export
 #'
 #'
-simARCL_scaled_10 <- function(seed, sampleSize, autoEffect, crossEffect){
-  set.seed(seed)
+simARCL_scaled_10 <- function(sampleSize, autoEffect, crossEffect){
 
   x1_t1 <-rnorm(n = sampleSize, mean = 0, sd = 1)
   x2_t1 <-rnorm(n = sampleSize, mean = 0, sd = 1)
@@ -106,7 +105,7 @@ simARCL_scaled_10 <- function(seed, sampleSize, autoEffect, crossEffect){
                      NA, NA, NA, NA, "s55"), nrow = 5, byrow = T)
 
 
-  AnalysisModels <- createARCLModel(numLatent = 5, Timepoints = 5, burning = 5,
+  AnalysisModels <- createARCLModel(sampleSize = sampleSize, numLatent = 5, Timepoints = 5, burning = 5,
                                     Avalues = Avalues, Afree = Afree, Alabel = Alabel,
                                     Svalues = Svalues, Sfree = Sfree, Slabel = Slabel,
                                     S_firstObsAllFree = T, SimulatedDataSet = SimulatedDataSet

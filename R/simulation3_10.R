@@ -117,7 +117,7 @@ simulation3_10 <- function(sampleSize, seed, wd, total_repetitions, crossEffect,
   while(iteration <= total_repetitions){
 
     # simulate ARCL-SEM:
-    simObj <- simARCL_scaled_10(seed = seed, sampleSize = sampleSize, autoEffect = autoEffect, crossEffect = crossEffect)
+    simObj <- simARCL_scaled_10(sampleSize = sampleSize, autoEffect = autoEffect, crossEffect = crossEffect)
 
     # extract and scale raw data
     full_raw_data <- simObj$mxARCL_FIML$data$observed
@@ -558,6 +558,6 @@ simulation3_10 <- function(sampleSize, seed, wd, total_repetitions, crossEffect,
 
   # note: regularization makes fit worse. The reason is that both parameters, the non-zero and the true-zero one are regularized. The non-zero one
   # gets pulled away from its true value and this impacts the over-all RMSEA more than setting a parameter that is close to zero to zero
-  save(overall_evaluation, parameterValues, RMSE, total_repetitions, Avalues, penAelement, Svalues, error, seed, crossEffect, autoEffect, file = paste("Simulation3_N", sampleSize, "_1_1000.RData", sep = ""))
+  save(overall_evaluation, parameterValues, RMSE, total_repetitions, Avalues, penAelement, Svalues, error, seed, crossEffect, autoEffect, file = paste("Simulation3_N", sampleSize, "_10percent_1_1000.RData", sep = ""))
 
 }

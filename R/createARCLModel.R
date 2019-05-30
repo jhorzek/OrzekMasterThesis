@@ -60,7 +60,7 @@
 #' @export
 #'
 #'
-createARCLModel <- function(numLatent, Timepoints, burning, Avalues, Afree, Alabel, Svalues, Sfree, Slabel, S_firstObsAllFree = TRUE, SimulatedDataSet){
+createARCLModel <- function(sampleSize, numLatent, Timepoints, burning, Avalues, Afree, Alabel, Svalues, Sfree, Slabel, S_firstObsAllFree = TRUE, SimulatedDataSet){
 
   simTimepoints = Timepoints + burning
 

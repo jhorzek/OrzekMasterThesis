@@ -5,7 +5,8 @@
 \title{Simulation study 3
 50 percent of cross-lagged parameters non-zero}
 \usage{
-simulation3_50(sampleSize, seed, wd, total_repetitions, crossEffect)
+simulation3_50(sampleSize, seed, wd, total_repetitions, crossEffect,
+  autoEffect)
 }
 \arguments{
 \item{sampleSize}{sampleSize}
