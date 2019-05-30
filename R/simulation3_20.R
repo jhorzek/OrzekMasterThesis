@@ -20,6 +20,7 @@ simulation3_20 <- function(sampleSize, seed, wd, total_repetitions, crossEffect,
   ##### Settings #####
 
   numLatent = 5
+  Timepoints = 5
   burning = 5
   set.seed(seed)
 
