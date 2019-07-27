@@ -1,4 +1,6 @@
-# OrzekMasterThesis# Installation
+# OrzekMasterThesis
+
+# Installation
 If you want to install OrzekMasterThesis from GitHub, use the following commands in R:
 
 ```{r, eval=FALSE}
@@ -88,7 +90,7 @@ autoEffect = .5
 simulation3_50(sampleSize = sampleSize, seed = seed, wd = wd, total_repetitions = total_repetitions, crossEffect = crossEffect, autoEffect = autoEffect)
 ```
 
-## Study 4:
+## Simulation 4:
 ```{r, eval=FALSE}
 library(OrzekMasterThesis)
 library(OpenMx)
